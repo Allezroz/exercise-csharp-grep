@@ -15,6 +15,8 @@ void RunTests()
         new Test(5, "\\w", "%12a", true),
         new Test(6, "\\w", "$%", false),
         new Test(7, "\\w", " ", true),
+        new Test(8, "[abc]", "apple", true),
+        new Test(9, "[abc]", "dog", false),
     ];
     string outc;
     bool outcome;

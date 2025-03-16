@@ -9,13 +9,27 @@ namespace Parser
     
     public static class Parser
     {
-        // One or more specified characters
+        // In specified character pattern
         private static int Characters(string input, string pattern)
         {
-            return input.IndexOf(pattern);
+            pattern.Replace("[", "");
+            pattern.Replace("]", "");
+
+            int idx = 0;
+
+            while (idx < input.Length)
+            {
+                if (pattern.Contains(input[idx]))
+                {
+                    return idx;
+                }
+                idx++;
+            }
+            return -1;
+
         }
 
-        // One or more \d digits
+        // \d digits
         private static int Digits(string input, string pattern)
         {
             int idx = 0;
@@ -30,7 +44,7 @@ namespace Parser
             }
             return -1;
         }
-        // One or more \w alphanumerics including space
+        // \w alphanumerics or whitespace
         private static int Alpha(string input, string pattern)
         {
             int idx = 0;
@@ -52,11 +66,7 @@ namespace Parser
 
         public static bool MatchPattern(string input, string pattern)
         {
-            if (pattern.Length == 1)
-            {
-                return Characters(input, pattern) != -1;
-            }
-            else if (pattern == "\\d")
+            if (pattern == "\\d")
             {
                 return Digits(input, pattern) != -1;
             }
@@ -66,7 +76,7 @@ namespace Parser
             }
             else
             {
-                throw new ArgumentException($"Unhandled pattern: {pattern}");
+                return Characters(input, pattern) != -1;
             }
 
 
