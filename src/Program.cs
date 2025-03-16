@@ -12,26 +12,29 @@ void RunTests()
         new Test(2, "a", "dsf", false),
         new Test(3, "\\d", "apple", false),
         new Test(4, "\\d", "12", true),
+        new Test(5, "\\w", "%12a", true),
+        new Test(6, "\\w", "$%", false),
+        new Test(7, "\\w", " ", true),
     ];
     string outc;
     bool outcome;
     foreach (Test t in tests)
     {
+        Console.WriteLine("***");
         Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input} - expected: {t.expected}");
         outcome = Parser.Parser.MatchPattern(t.input, t.pattern) ? true : false;
         Console.WriteLine($"Outcome: {outcome} Expected: {t.expected}");
         outc = outcome == t.expected ? "PASS" : "FAIL";
         Console.WriteLine($"TEST {t.n} {outc}");
     }
-
-
+    Console.WriteLine("***");
 
     Environment.Exit(0);
 }
 
 
-
-//RunTests();
+// comment this out before submitting
+// RunTests();
 
 // This is functionally Main() and will do nothing but handle the console input
 

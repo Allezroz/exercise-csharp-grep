@@ -28,7 +28,21 @@ namespace Parser
                 }
                 idx++;
             }
+            return -1;
+        }
+        // One or more \w alphanumerics including space
+        private static int Alpha(string input, string pattern)
+        {
+            int idx = 0;
 
+            while (idx < input.Length)
+            {
+                if (char.IsLetterOrDigit(input[idx]) || char.IsWhiteSpace(input[idx]))
+                {
+                    return idx;
+                }
+                idx++;
+            }
             return -1;
         }
 
@@ -45,6 +59,10 @@ namespace Parser
             else if (pattern == "\\d")
             {
                 return Digits(input, pattern) != -1;
+            }
+            else if (pattern == "\\w")
+            {
+                return Alpha(input, pattern) != -1;
             }
             else
             {
