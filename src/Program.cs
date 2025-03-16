@@ -19,6 +19,11 @@ void RunTests()
         new Test(9, "[abc]", "dog", false),
         new Test(10, "[^abc]", "apple", false),
         new Test(11, "[^abc]", "dog", true),
+        new Test(12, "\\w\\w", "dog", true),
+        new Test(13, "\\d \\d", "dog", false),
+        new Test(14, "\\w[abo]\\w", "dog", true),
+        new Test(15, "do[^g]", "dog", false),
+        new Test(16, "do[^d]", "dog", true),
     ];
     string outc;
     bool outcome;
