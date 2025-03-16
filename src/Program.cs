@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Parser;
 
-bool LOCAL = true;
+bool LOCAL = false;
 bool DEBUG = false;
 
 void RunTests()
