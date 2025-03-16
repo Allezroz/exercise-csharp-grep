@@ -10,54 +10,53 @@ namespace Parser
     public static class Parser
     {
         // In specified character pattern
-        private static int Characters(string input, string pattern)
+        private static bool Characters(string input, string pattern)
         {
-            pattern.Replace("[", "");
-            pattern.Replace("]", "");
+            pattern = pattern.Replace("[", "").Replace("]", "");
 
-            int idx = 0;
+            bool neg = (pattern[0] == '^');
 
-            while (idx < input.Length)
+            if (neg)
             {
-                if (pattern.Contains(input[idx]))
-                {
-                    return idx;
-                }
-                idx++;
+                pattern = pattern[1..];
             }
-            return -1;
+
+            foreach (char c in input)
+            {
+                if (pattern.Contains(c))
+                {
+                    return !neg;
+                }
+            }
+            return neg;
 
         }
 
         // \d digits
-        private static int Digits(string input, string pattern)
+        private static bool Digits(string input, string pattern)
         {
-            int idx = 0;
 
-            while (idx < input.Length)
+            foreach (char c in input)
             {
-                if (char.IsDigit(input[idx]))
+                if (char.IsDigit(c))
                 {
-                    return idx;
+                    return true;
                 }
-                idx++;
             }
-            return -1;
+            return false;
         }
         // \w alphanumerics or whitespace
-        private static int Alpha(string input, string pattern)
+        private static bool Alpha(string input, string pattern)
         {
-            int idx = 0;
 
-            while (idx < input.Length)
+            foreach (char c in input)
             {
-                if (char.IsLetterOrDigit(input[idx]) || char.IsWhiteSpace(input[idx]))
+                if (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))
                 {
-                    return idx;
+                    return true;
                 }
-                idx++;
             }
-            return -1;
+            return false;
         }
 
         // Take the string and pattern, handle the stepping and parsing.
@@ -68,15 +67,15 @@ namespace Parser
         {
             if (pattern == "\\d")
             {
-                return Digits(input, pattern) != -1;
+                return Digits(input, pattern);
             }
             else if (pattern == "\\w")
             {
-                return Alpha(input, pattern) != -1;
+                return Alpha(input, pattern);
             }
             else
             {
-                return Characters(input, pattern) != -1;
+                return Characters(input, pattern);
             }
 
 

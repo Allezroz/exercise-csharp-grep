@@ -17,6 +17,8 @@ void RunTests()
         new Test(7, "\\w", " ", true),
         new Test(8, "[abc]", "apple", true),
         new Test(9, "[abc]", "dog", false),
+        new Test(10, "[^abc]", "apple", false),
+        new Test(11, "[^abc]", "dog", true),
     ];
     string outc;
     bool outcome;
@@ -36,7 +38,7 @@ void RunTests()
 
 
 // comment this out before submitting
-// RunTests();
+//RunTests();
 
 // This is functionally Main() and will do nothing but handle the console input
 
