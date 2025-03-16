@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using Parser;
 
+bool LOCAL = true;
+bool DEBUG = false;
 
 void RunTests()
 
@@ -24,15 +26,17 @@ void RunTests()
         new Test(14, "\\w[abo]\\w", "dog", true),
         new Test(15, "do[^g]", "dog", false),
         new Test(16, "do[^d]", "dog", true),
+        new Test(17, "^do[^d]", "dog", true),
+        new Test(18, "^do[^d]", "gdog", false),
     ];
     string outc;
     bool outcome;
     foreach (Test t in tests)
     {
-        Console.WriteLine("***");
-        Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input} - expected: {t.expected}");
-        outcome = Parser.Parser.MatchPattern(t.input, t.pattern) ? true : false;
-        Console.WriteLine($"Outcome: {outcome} Expected: {t.expected}");
+        if (DEBUG) Console.WriteLine("***");
+        if (DEBUG) Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input} - expected: {t.expected}");
+        outcome = Parser.Parser.MatchPattern(t.input, t.pattern, DEBUG) ? true : false;
+        if (DEBUG) Console.WriteLine($"Outcome: {outcome} Expected: {t.expected}");
         outc = outcome == t.expected ? "PASS" : "FAIL";
         Console.WriteLine($"TEST {t.n} {outc}");
     }
@@ -41,9 +45,8 @@ void RunTests()
     Environment.Exit(0);
 }
 
-
-// comment this out before submitting
-//RunTests();
+if (LOCAL) 
+    RunTests();
 
 // This is functionally Main() and will do nothing but handle the console input
 
@@ -59,7 +62,7 @@ string inputLine = Console.In.ReadToEnd();
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 Console.Error.WriteLine("Logs from your program will appear here!");
  
- if (Parser.Parser.MatchPattern(inputLine, pattern))
+ if (Parser.Parser.MatchPattern(inputLine, pattern, DEBUG))
  {
     Environment.Exit(0);
 }

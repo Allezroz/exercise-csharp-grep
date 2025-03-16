@@ -76,8 +76,7 @@ namespace Parser
                         tkn = tkn + pattern[idx];
                         idx += 1;
                     }
-                    tkn = tkn + pattern[idx];
-                     // adds the closing bracket
+                    tkn = tkn + pattern[idx]; // adds the closing bracket
                 }
                 else // single character of any sort
                 {
@@ -93,7 +92,7 @@ namespace Parser
 
         }
 
-        public static bool MatchPattern(string input, string pattern)
+        public static bool MatchPattern(string input, string pattern, bool DEBUG)
         {
             Queue<string> originalQ = Tokenize(pattern);
             Queue<string> Q = new Queue<string>();
@@ -109,12 +108,23 @@ namespace Parser
                 INidx = OUTidx;
                 Q = new Queue<string>(originalQ);
 
-              //  foreach(var item in originalQ)
-              // { Console.WriteLine(item); }
+
+                if (DEBUG)
+                    foreach (var item in originalQ)
+                        Console.WriteLine(item);
+                            
 
                 while (Q.Count > 0 && INidx < input.Length && ret == true)
                 {
                     pat = Q.Dequeue();
+
+                    if (pat == "^")
+                    {
+                        if (INidx != 0)
+                            return false;
+                        pat = Q.Dequeue();
+                    }
+
                     if (pat == "\\d")
                     {
                         ret = Digits(input[INidx], pat);
@@ -125,7 +135,8 @@ namespace Parser
                     }
                     else if (pat.StartsWith("[^")) // neg fails on fail
                     {
-                        if (!Characters(input[INidx], pat)) return false;
+                        if (!Characters(input[INidx], pat))
+                            return false;
                     }
                     else
                     {
@@ -135,7 +146,8 @@ namespace Parser
                     INidx += 1;
                 }
 
-                if (Q.Count == 0 && ret==true) return true;
+                if (Q.Count == 0 && ret==true) 
+                    return true;
                 OUTidx += 1;
             }
 
