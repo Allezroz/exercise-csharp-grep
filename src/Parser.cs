@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
+    
     public static class Parser
     {
         // One or more specified characters
@@ -25,6 +26,7 @@ namespace Parser
                 {
                     return idx;
                 }
+                idx++;
             }
 
             return -1;
