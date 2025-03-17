@@ -39,6 +39,7 @@ namespace Tests
                 new Test(20, "do[^g]$", "gdog", false, "End anchor fail (char parse)"),
                 new Test(21, "gdo$", "gdog", false, "End anchor fail (not EOS)"),
                 new Test(22, "^gdog$", "gdog", true, "Double Anchor Pass"),
+                new Test(23, "\\d \\w\\w\\ws","sally has 1 dog", false, "failed?")
         ];
             string outc;
             bool outcome;

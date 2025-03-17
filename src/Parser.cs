@@ -147,12 +147,12 @@ namespace Parser
                 }
                 // needs a catch for the case where we hit end of string with an end of string anchor
                 // needs to handle case with start of string and end of string anchors
-
+                
+                if (Q.Count == 0 && ret == true)
+                    return true;
                 if (INidx == input.Length && Q.Count == 1 && Q.Dequeue() == "$" && ret == true) // EOS anchor
                     return true;
 
-                if (Q.Count == 0 && ret==true) 
-                    return true;
                 OUTidx += 1;
             }
 
