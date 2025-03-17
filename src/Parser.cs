@@ -78,7 +78,7 @@ namespace Parser
                     }
                     tkn = tkn + pattern[idx]; // adds the closing bracket
                 }
-                else // single character of any sort
+                else // single character of any sort including anchors
                 {
                     tkn = tkn + pattern[idx];
                 }
@@ -145,6 +145,11 @@ namespace Parser
 
                     INidx += 1;
                 }
+                // needs a catch for the case where we hit end of string with an end of string anchor
+                // needs to handle case with start of string and end of string anchors
+
+                if (INidx == input.Length && Q.Count == 1 && Q.Dequeue() == "$" && ret == true) // EOS anchor
+                    return true;
 
                 if (Q.Count == 0 && ret==true) 
                     return true;
