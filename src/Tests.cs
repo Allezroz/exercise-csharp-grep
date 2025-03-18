@@ -43,6 +43,8 @@ namespace Tests
                 new Test(24, "ca+t","cat", true, "'one or more' singleton"),
                 new Test(25, "ca+t","caaat", true, "'one or more' multiple"),
                 new Test(26, "ca+t","cst", false, "'one or more' zero"),
+                new Test(27, "cats?","cat", true, "'zero or one' zero"),
+                new Test(28, "cats?","cats", true, "'zero or one' one"),
         ];
             string outc;
             bool outcome;

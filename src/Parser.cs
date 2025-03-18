@@ -86,7 +86,7 @@ namespace Parser
 
                 // handle one or more and zero or one
 
-                if (idx < pattern.Length && pattern[idx] == '+')
+                if (idx < pattern.Length && "+?".Contains(pattern[idx]))
                 {
                     tkn = tkn + pattern[idx];
                     idx += 1;
@@ -115,6 +115,7 @@ namespace Parser
             int OUTidx = 0;
             bool ret = true;
             bool OneOrMore;
+            bool ZeroOrOne;
             int matches;
 
             while (OUTidx < input.Length)
@@ -145,10 +146,16 @@ namespace Parser
                     // One or More handling
                     matches = 0;
                     OneOrMore = false;
+                    ZeroOrOne = false;
 
                     if (pat.EndsWith('+'))
                     {
                         OneOrMore = true;
+                        pat = pat.Remove(pat.Length - 1);
+                    }
+                    else if (pat.EndsWith('?'))
+                    {
+                        ZeroOrOne = true;
                         pat = pat.Remove(pat.Length - 1);
                     }
 
@@ -160,7 +167,7 @@ namespace Parser
 
                         if (OneOrMore && ret)
                             INidx += 1;
-                        else if (OneOrMore && matches >= 1)
+                        else if ((OneOrMore && matches >= 1) || (ZeroOrOne && matches == 0))
                         {
                             INidx -= 1;
                             ret = true;
