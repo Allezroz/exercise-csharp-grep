@@ -23,9 +23,9 @@ namespace Parser
 
             if (pattern.Contains(c))
             {
-                return !neg;
+                return neg ^ true;
             }
-            return neg;
+            return neg ^ false;
 
         }
 
@@ -52,9 +52,7 @@ namespace Parser
             return false;
         }
 
-        // Take the string and pattern, handle the stepping and parsing.
-        // Can pass an idx by reference to keep the starting point and 'cursor' separate
-        // or it can pass the substring up and receive an index integer back or -1 on false? - I like this better
+
         private static Queue<string> Tokenize(string pattern)
         {
             int idx = 0;
@@ -83,14 +81,30 @@ namespace Parser
                     tkn = tkn + pattern[idx];
                 }
 
-                ret.Enqueue(tkn);
+                
                 idx+=1;
+
+                // handle one or more and zero or one
+
+                if (idx < pattern.Length && pattern[idx] == '+')
+                {
+                    tkn = tkn + pattern[idx];
+                    idx += 1;
+                }
+
+                ret.Enqueue(tkn);
                 tkn = "";
             }
 
             return ret;
 
         }
+        public static bool HandlePattern(char c, string pat) => pat switch
+        {
+            "\\d" => Digits(c, pat),
+            "\\w" => Alpha(c, pat),
+            _ => Characters(c, pat)
+        };
 
         public static bool MatchPattern(string input, string pattern, bool DEBUG)
         {
@@ -100,7 +114,8 @@ namespace Parser
             int INidx = 0;
             int OUTidx = 0;
             bool ret = true;
-
+            bool OneOrMore;
+            int matches;
 
             while (OUTidx < input.Length)
             {
@@ -116,8 +131,10 @@ namespace Parser
 
                 while (Q.Count > 0 && INidx < input.Length && ret == true)
                 {
+                    
                     pat = Q.Dequeue();
-
+                    
+                    // Start of Line
                     if (pat == "^")
                     {
                         if (INidx != 0)
@@ -125,23 +142,32 @@ namespace Parser
                         pat = Q.Dequeue();
                     }
 
-                    if (pat == "\\d")
+                    // One or More handling
+                    matches = 0;
+                    OneOrMore = false;
+
+                    if (pat.EndsWith('+'))
                     {
-                        ret = Digits(input[INidx], pat);
+                        OneOrMore = true;
+                        pat = pat.Remove(pat.Length - 1);
                     }
-                    else if (pat == "\\w")
+
+                    // Patterns
+                    while ((matches == 0 || OneOrMore) && ret && INidx < input.Length)
                     {
-                        ret = Alpha(input[INidx], pat);
+                        ret = HandlePattern(input[INidx], pat);
+                        matches += ret ? 1 : 0;
+
+                        if (OneOrMore && ret)
+                            INidx += 1;
+                        else if (OneOrMore && matches >= 1)
+                        {
+                            INidx -= 1;
+                            ret = true;
+                            break;
+                        }
                     }
-                    else if (pat.StartsWith("[^")) // neg fails on fail
-                    {
-                        if (!Characters(input[INidx], pat))
-                            return false;
-                    }
-                    else
-                    {
-                        ret = Characters(input[INidx], pat);
-                    }
+                    
 
                     INidx += 1;
                 }

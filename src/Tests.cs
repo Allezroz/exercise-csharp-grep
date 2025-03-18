@@ -26,7 +26,7 @@ namespace Tests
                 new Test(7, "\\w", " ", true, "Single Word WC space"),
                 new Test(8, "[abc]", "apple", true, "Char Group"),
                 new Test(9, "[abc]", "dog", false, "Char Group"),
-                new Test(10, "[^abc]", "apple", false, "NOT Char Group"),
+                new Test(10, "[^abc]", "cab", false, "NOT Char Group"),
                 new Test(11, "[^abc]", "dog", true, "NOT Char Group"),
                 new Test(12, "\\w\\w", "dog", true, "Multiple Word"),
                 new Test(13, "\\d \\d", "dog", false, "Multiple fail case"),
@@ -39,7 +39,10 @@ namespace Tests
                 new Test(20, "do[^g]$", "gdog", false, "End anchor fail (char parse)"),
                 new Test(21, "gdo$", "gdog", false, "End anchor fail (not EOS)"),
                 new Test(22, "^gdog$", "gdog", true, "Double Anchor Pass"),
-                new Test(23, "\\d \\w\\w\\ws","sally has 1 dog", false, "failed?")
+                new Test(23, "\\d \\w\\w\\ws","sally has 1 dog", false, "failed?"),
+                new Test(24, "ca+t","cat", true, "'one or more' singleton"),
+                new Test(25, "ca+t","caaat", true, "'one or more' multiple"),
+                new Test(26, "ca+t","cst", false, "'one or more' zero"),
         ];
             string outc;
             bool outcome;
@@ -49,10 +52,10 @@ namespace Tests
                 outcome = Parser.Parser.MatchPattern(t.input, t.pattern, DEBUG) ? true : false;
 
                 if (DEBUG || !(outcome == t.expected)) Console.WriteLine("***");
-                if (DEBUG || !(outcome == t.expected)) Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input} - Description: {t.description}");
+                if (DEBUG || !(outcome == t.expected)) Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input}");
                 if (DEBUG || !(outcome == t.expected)) Console.WriteLine($"Outcome: {outcome} Expected: {t.expected}");
                 outc = outcome == t.expected ? "PASS" : "FAIL";
-                Console.WriteLine($"TEST {t.n} {outc}");
+                Console.WriteLine($"TEST {t.n} {outc} - Description: {t.description}");
             }
             Console.WriteLine("***");
 
