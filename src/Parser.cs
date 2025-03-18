@@ -103,6 +103,7 @@ namespace Parser
         {
             "\\d" => Digits(c, pat),
             "\\w" => Alpha(c, pat),
+            "." => true, // wildcard any character
             _ => Characters(c, pat)
         };
 
@@ -183,8 +184,23 @@ namespace Parser
                 
                 if (Q.Count == 0 && ret == true)
                     return true;
-                if (INidx == input.Length && Q.Count == 1 && Q.Dequeue() == "$" && ret == true) // EOS anchor
-                    return true;
+                if (INidx == input.Length && ret == true) // Has worked through the string but has queue elements remaining - EOS and optionals
+                {
+                    while (Q.Count >= 1)
+                    {
+                        pat = Q.Dequeue();
+
+                        if (Q.Count == 0 && (pat == "$" || pat.EndsWith('?')))
+                        {
+                            return true;
+                        }
+                        else if (!pat.EndsWith('?'))
+                        {
+                            ret = false;
+                            break;
+                        }
+                    }
+                }
 
                 OUTidx += 1;
             }
