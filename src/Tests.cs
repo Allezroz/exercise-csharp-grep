@@ -12,7 +12,7 @@ namespace Tests
     {
         
 
-        public static void RunTests(bool DEBUG)
+        public static void RunTests()
 
         {
             Test[] tests =
@@ -45,21 +45,24 @@ namespace Tests
                 new Test(26, "ca+t","cst", false, "'one or more' zero"),
                 new Test(27, "cats?","cat", true, "'zero or one' zero"),
                 new Test(28, "cats?","cats", true, "'zero or one' one"),
+                new Test(29, "g.+gol","goøö0Ogol", true, "one or more with wildcard and many")
         ];
             string outc;
             bool outcome;
             foreach (Test t in tests)
             {
 
-                outcome = Parser.Parser.MatchPattern(t.input, t.pattern, DEBUG) ? true : false;
-
-                if (DEBUG || !(outcome == t.expected)) Console.WriteLine("***");
-                if (DEBUG || !(outcome == t.expected)) Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input}");
-                if (DEBUG || !(outcome == t.expected)) Console.WriteLine($"Outcome: {outcome} Expected: {t.expected}");
+                outcome = Parser.Parser.Grep(t.input, t.pattern) ? true : false;
                 outc = outcome == t.expected ? "PASS" : "FAIL";
                 Console.WriteLine($"TEST {t.n} {outc} - Description: {t.description}");
+                if (!(outcome == t.expected)) Console.WriteLine("***");
+                if (!(outcome == t.expected)) Console.WriteLine($"Test {t.n} - {t.pattern} in {t.input}");
+                if (!(outcome == t.expected)) Console.WriteLine($"Outcome: {outcome} Expected: {t.expected}");
+                if (!(outcome == t.expected)) Console.WriteLine("***");
+
+
             }
-            Console.WriteLine("***");
+            
 
             Environment.Exit(2);
         }

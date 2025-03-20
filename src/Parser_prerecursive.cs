@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// TO DO: EOL ANCHOR IS FAILING
-
 namespace Parser
 {
-
+    
     public static class Parser
     {
         // In specified character pattern
@@ -54,13 +52,13 @@ namespace Parser
 
         public static bool HandlePattern(char c, string pat) => pat switch
         {
-            "\\d" => Digits(c, pat),
-            "\\w" => Alpha(c, pat),
-            "." => true, // wildcard any character
+        "\\d" => Digits(c, pat),
+        "\\w" => Alpha(c, pat),
+        "." => true, // wildcard any character
             _ => Characters(c, pat)
         };
 
-        public static bool MatchPattern(string input, string pattern) // this needs to be able to accept an empty 'input' string and then check for optionals
+        public static bool MatchPattern(string input, string pattern, List<string> backpatterns = new List<string>()) // this needs to be able to accept an empty 'input' string and then check for optionals
         {
             string pat = "";
             bool match = false;
@@ -73,7 +71,7 @@ namespace Parser
             {
                 pat = pat + pattern[0];
                 pattern = pattern.Substring(1);
-                if (pat == "\\") // '/' refs. Double digit backreferences will fuck this, if those are even allowed.
+                if (pat == "/") // '/' refs. Double digit backreferences will fuck this, if those are even allowed.
                 {
                     pat = pat + pattern[0];
                     pattern = pattern.Substring(1);
@@ -88,13 +86,14 @@ namespace Parser
                     pattern = pattern.Substring(1);
                 }
             }
+            Console.WriteLine($"Pattern: {pattern}, Pat: {pat}");
             if (pattern.Length > 0 && pattern.StartsWith('?'))
             {
 
-                if (input.Length > 0 && HandlePattern(input[0], pat))
-                    ret = MatchPattern(input.Substring(1), pattern.Substring(1));
+                if (pattern.Length > 0 && HandlePattern(input[0], pat))
+                    ret = MatchPattern(input.Substring(1), pattern.Substring(1), backpatterns);
                 else
-                    ret = MatchPattern(input, pattern.Substring(1));
+                    ret = MatchPattern(input, pattern.Substring(1), backpatterns);
 
             }
             else if (pattern.Length > 0 && pattern.StartsWith('+'))
@@ -106,25 +105,25 @@ namespace Parser
                 if (input.Length > 0 && HandlePattern(input[0], pat))
                 {
                     // First try: match current character and then try more of the same pattern
-                    bool matchMore = MatchPattern(input.Substring(1), pat + "+" + remainingPattern);
+                    bool matchMore = MatchPattern(input.Substring(1), pat + "+" + remainingPattern, backpatterns);
 
                     if (matchMore)
                         return true;
 
                     // Second try: match current character and move to the next part of the pattern
-                    return MatchPattern(input.Substring(1), remainingPattern);
+                    return MatchPattern(input.Substring(1), remainingPattern, backpatterns);
                 }
 
                 // '+' requires at least one match, so return false if no match
                 return false;
             }
-            else if (pat == "$" && input.Length == 0)
+            else if (pattern == '$' && input.Length == 0 && pattern.Length == 1)
             {
                 ret = true;
             }
-            else if (input.Length > 0 && HandlePattern(input[0], pat))
-                ret = MatchPattern(input.Substring(1), pattern);
-
+            else if (HandlePattern(input[0], pat))
+                ret = MatchPattern(input.Substring(1), pattern, backpatterns);
+                
             return ret;
         }
 
