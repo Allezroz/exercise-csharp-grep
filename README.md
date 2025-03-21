@@ -1,38 +1,9 @@
-[![progress-banner](https://backend.codecrafters.io/progress/grep/ef905934-b3e9-4c9a-9307-e2e98ef6faa7)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+Writing Grep in C# as an exercise to get more comfortable with C#.
 
-This is a starting point for C# solutions to the
-["Build Your Own grep" Challenge](https://app.codecrafters.io/courses/grep/overview).
+Some non-idiomatic bits inherited from the platform - the top-level statements, and the manual test harness to 'play nice' with it rather than using any of the normal testing frameworks.
 
-[Regular expressions](https://en.wikipedia.org/wiki/Regular_expression)
-(Regexes, for short) are patterns used to match character combinations in
-strings. [`grep`](https://en.wikipedia.org/wiki/Grep) is a CLI tool for
-searching using Regexes.
+I'm pretty cynical about guided projects, but there were some interesting bits here. First, trying to force myself to use some semblence of TDD, which I have real thoughts on.
 
-In this challenge you'll build your own implementation of `grep`. Along the way
-we'll learn about Regex syntax, how parsers/lexers work, and how regular
-expressions are evaluated.
+Second, my approach ended up pushing me more toward wanting to embrace functional programming as a primary approach - I started with creating a token queue, which looked like a reasonable approach when features were being 'trickled' in through the guidance. I refactored to a recursive approach, which I like much more, but feels like a clumsy reimplementation of what I could have done in Haskell purely functionally.
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
-
-# Passing the first stage
-
-The entry point for your `grep` implementation is in `src/Program.cs`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
-
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
-```
-
-Time to move on to the next stage!
-
-# Stage 2 & beyond
-
-Note: This section is for stages 2 and beyond.
-
-1. Ensure you have `dotnet (9.0)` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `src/Program.cs`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+I don't think I want to rewrite this in Haskell, but the next thing I write will be in some FP-forward language.
