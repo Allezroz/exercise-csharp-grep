@@ -2,7 +2,9 @@ Writing Grep in C# as an exercise to get more comfortable with C#.
 
 Some non-idiomatic bits inherited from the platform - the top-level statements, and the manual test harness to 'play nice' with it rather than using any of the normal testing frameworks.
 
-I'm pretty cynical about guided projects, but there were some interesting bits here. First, trying to force myself to use some semblence of TDD, which I have real thoughts on.
+I'm pretty cynical about guided projects, but there were some interesting bits here. 
+
+First, trying to force myself to use some semblence of TDD, which was interesting - almost a human implementation of a declarative paradigm where we tell ourselves what we want and then go about delivering. Also simply learning tools - getting FAR more comfortable with Visual Studio debug tools makes me appreciate IDEs at least a little bit.
 
 Second, my approach ended up pushing me more toward wanting to embrace functional programming as a primary approach - I started with creating a token queue, which looked like a reasonable approach when features were being 'trickled' in through the guidance. I refactored to a recursive approach, which I like much more, but feels like a clumsy reimplementation of what I could have done in Haskell purely functionally.
 
