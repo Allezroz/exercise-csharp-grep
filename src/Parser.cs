@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// TO DO: EOL ANCHOR IS FAILING
+// TO DO: Alternation (cat|dog) line 84
+// add handling: pattern opens with ( and contains |, we strip brackets, split on | and check each pattern.
 
 namespace Parser
 {
@@ -88,6 +89,7 @@ namespace Parser
                     pattern = pattern.Substring(1);
                 }
             }
+
             if (pattern.Length > 0 && pattern.StartsWith('?'))
             {
 
@@ -97,32 +99,33 @@ namespace Parser
                     ret = MatchPattern(input, pattern.Substring(1));
 
             }
-            else if (pattern.Length > 0 && pattern.StartsWith('+'))
+            else if (pattern.Length > 0 && pattern.StartsWith('+')) // refactor me to match stylistically
             {
-                // '+' means "one or more" of the preceding pattern
-                string remainingPattern = pattern.Substring(1); // Remove the '+' character
-
-                // We need at least one match for '+'
+                string remainingPattern = pattern.Substring(1);
                 if (input.Length > 0 && HandlePattern(input[0], pat))
                 {
-                    // First try: match current character and then try more of the same pattern
                     bool matchMore = MatchPattern(input.Substring(1), pat + "+" + remainingPattern);
-
                     if (matchMore)
                         return true;
-
-                    // Second try: match current character and move to the next part of the pattern
                     return MatchPattern(input.Substring(1), remainingPattern);
                 }
-
-                // '+' requires at least one match, so return false if no match
                 return false;
             }
             else if (pat == "$" && input.Length == 0)
             {
                 ret = true;
             }
-            else if (input.Length > 0 && HandlePattern(input[0], pat))
+            else if (pat.StartsWith('(') && pat.Contains('|')) // alternation
+            {
+                string[] pats = pat.Replace("(", "").Replace(")", "").Split('|');
+                for (int idx = 0; idx < pats.Length; idx++)
+                    if (input.StartsWith(pats[idx]))
+                    {
+                        ret = MatchPattern(input.Substring(pats[idx].Length), pattern);
+                        break;
+                    }
+            }
+            else if (input.Length > 0 && HandlePattern(input[0], pat)) // any other pattern
                 ret = MatchPattern(input.Substring(1), pattern);
 
             return ret;

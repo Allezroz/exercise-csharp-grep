@@ -45,7 +45,12 @@ namespace Tests
                 new Test(26, "ca+t","cst", false, "'one or more' zero"),
                 new Test(27, "cats?","cat", true, "'zero or one' zero"),
                 new Test(28, "cats?","cats", true, "'zero or one' one"),
-                new Test(29, "g.+gol","goøö0Ogol", true, "one or more with wildcard and many")
+                new Test(29, "g.+gol","goøö0Ogol", true, "one or more with wildcard and many"),
+                new Test(30, "(cat|dog)","cat", true, "alternation left"),
+                new Test(31, "(cat|dog)","dog", true, "alternation right"),
+                new Test(32, ".+(cat|dog)","dsfargegcat", true, "alternation after any number of wildcard"),
+                new Test(33, "(cat|dog)","ctttttttttttttt", false, "alternation failure"),
+
         ];
             string outc;
             bool outcome;
