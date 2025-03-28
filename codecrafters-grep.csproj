@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\Parser.cs" />
     <Compile Remove="src\Parser_prerecursive.cs" />
+    <Compile Remove="src\Tests.cs" />
   </ItemGroup>
 
 </Project>
