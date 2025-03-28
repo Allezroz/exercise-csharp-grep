@@ -296,6 +296,7 @@ internal class Program
             hasEndAnchor
                 ? tokensWithoutStart.Take(tokensWithoutStart.Count - 1).ToList()
                 : tokensWithoutStart;
+
         if (!hasStartAnchor)
         {
             // We allow partial matches if '^' is NOT in the pattern,
